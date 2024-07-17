@@ -1,4 +1,4 @@
-# Laravel + Tailwind + Openweather API
+# Laravel + ReactJS + Tailwind + Openweather API
 
 This is a Laravel code for Openweather API with tailwind.
 
