@@ -1,18 +1,47 @@
-import React, { useState } from "react";
+import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
+import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
+import { ToastContainer, toast } from 'react-toastify';
 import { useForm } from '@inertiajs/react';
 
 export default function Coordinates() {
     
-    const { data, setData, patch, errors, processing, recentlySuccessful } = useForm({
-        longitude: '',
-        latitude: '',
+    const { data, setData } = useForm({
+        'longitude' : '',
+        'latitude'  : '',
     });
+
+    const handleSearch = (e) => {
+        var regLatitude = new RegExp("^-?([0-8]?[0-9]|90)(\.[0-9]{1,10})$");
+        var regLongitude = new RegExp("^-?([0-9]{1,2}|1[0-7][0-9]|180)(\.[0-9]{1,10})$");
+
+		if (!regLatitude.exec(data.latitude) || !regLongitude.exec(data.longitude)) {
+            toast.error("Invalid coordinates");
+            return;
+        }
+
+        toast.loading("Please wait...");
+        
+        axios.get(route('weather.coordinates'), {
+            params: data            
+        })
+        .then(function (response) {
+            toast.dismiss();
+            if (response.data.status == 'error') {
+                toast.error(response.data.message);                
+            } else {
+                toast.success("Please see result");
+            }            
+        }).catch(function (error) {
+            toast.dismiss();				
+            toast.error("Form submission has failed!");            
+        });
+	};
 
     return (
         <section className="p-4 max-w-xl">
-            <form className="mt-6 space-y-6">
+            <div className="mt-6 space-y-6 ryh">
                 <header>
                     <p className="mt-1 text-sm text-gray-600">
                         Search weather by longitude and latitude
@@ -42,7 +71,11 @@ export default function Coordinates() {
                         autoComplete="latitude"
                     />
                 </div>
-            </form>
+                <div className="mt-6 flex items-center gap-4">
+                    <PrimaryButton onClick={ () => handleSearch() }>Search</PrimaryButton>
+                </div>
+                <ToastContainer />
+            </div>
         </section>
     );
 }

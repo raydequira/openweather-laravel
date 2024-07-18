@@ -1,17 +1,46 @@
 import React, { useState } from "react";
+import axios from 'axios';
 import InputLabel from '@/Components/InputLabel';
+import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
-import { useForm } from '@inertiajs/react';
+import { ToastContainer, toast } from 'react-toastify';
 
-export default function City() {
-    
-    const { data, setData, patch, errors, processing, recentlySuccessful } = useForm({
-        city: '',
-    });
+export default function City() {    
+    const [data, setData] = useState("");
+
+    const handleChange = (e) => {		
+		setData(e.target.value);
+	};
+
+    const handleSearch = (e) => {        
+		if (data.length < 2) {
+            toast.error("Please search a City with atleast 2 letters");
+            return;
+        }
+
+        toast.loading("Please wait...");
+        
+        axios.get(route('weather.city'), {
+            params: {
+                'city': data,
+            }            
+        })
+        .then(function (response) {
+            toast.dismiss();
+            if (response.data.status == 'error') {
+                toast.error(response.data.message);                
+            } else {
+                toast.success("Please see result");
+            }            
+        }).catch(function (error) {
+            toast.dismiss();		
+            toast.error("Form submission has failed!");            		
+        });
+	};
 
     return (
         <section className="p-4 max-w-xl">
-            <form className="mt-6 space-y-6">
+            <div className="mt-6 space-y-6">
                 <header>
                     <p className="mt-1 text-sm text-gray-600">
                         Search weather by City name
@@ -23,13 +52,17 @@ export default function City() {
                         id="city"
                         className="mt-1 block w-full"
                         value={data.city}
-                        onChange={(e) => setData('city', e.target.value)}
+                        onChange={(e) => handleChange(e)}
                         required
                         isFocused
                         autoComplete="city"
                     />
                 </div>
-            </form>
+            </div>
+            <div className="mt-6 flex items-center gap-4">
+                <PrimaryButton onClick={ () => handleSearch() }>Search</PrimaryButton>
+            </div>
+            <ToastContainer />
         </section>
     );
 }
