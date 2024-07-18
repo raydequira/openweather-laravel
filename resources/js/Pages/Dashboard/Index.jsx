@@ -8,7 +8,7 @@ import { Tab } from "@headlessui/react";
 import TabIcons from '@/Pages/Dashboard/TabIcons';
 
 
-export default function Index({ auth }) {
+export default function Index({ auth, cities }) {
     const [currentTab, setCurrentTab] = useState("City");
     const [historyData, setHistoryData] = useState("");
     const tabs = [
@@ -20,8 +20,6 @@ export default function Index({ auth }) {
         setHistoryData("");
 		setCurrentTab(tabName);
 	};
-    
-    
 
     const TabDefault = ({ tabName }) => {
 		return (
@@ -60,7 +58,7 @@ export default function Index({ auth }) {
 		switch(currentTab) {
             case 'City':
                 return (
-                    <City historyData={historyData}/>
+                    <City historyData={historyData} cities={cities}/>
                 );
             case 'Coordinates':
                 return (

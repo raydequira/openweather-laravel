@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { AutoComplete } from 'primereact/autocomplete';
 import axios from 'axios';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
@@ -7,11 +8,24 @@ import { ToastContainer, toast } from 'react-toastify';
 import CityTable from "@/Pages/Dashboard/Panel/CityTable";
 
 export default function City({
+    cities,
     historyData
 }) {    
     const [data, setData] = useState("");
     // Show history data if given
     const [weatherData, setWeatherData] = useState(historyData);
+    const [value, setValue] = useState('');
+    const [items, setItems] = useState('');
+
+    const search = (event) => { 
+        let updatedList = cities.filter((city) => {
+            if (city.toLowerCase().match(event.query.toLowerCase())) {
+                return true;
+            }
+        });
+        
+        setItems(updatedList);
+    }
 
     const handleChange = (e) => {		
 		setData(e.target.value);
@@ -51,18 +65,15 @@ export default function City({
                     <p className="mt-1 text-sm text-gray-600">
                         Search weather by City name
                     </p>
-                </header>                
-                <div>
+                </header>
+                <div class="autocomplete-input">
                     <InputLabel htmlFor="city" value="City" />
-                    <TextInput
-                        id="city"
-                        className="mt-1 block w-full"
-                        value={data.city}
-                        onChange={(e) => handleChange(e)}
-                        required
-                        isFocused
-                        autoComplete="city"
-                    />
+                    <AutoComplete 
+                        value={data} 
+                        suggestions={items} 
+                        completeMethod={search} 
+                        onChange={(e) => handleChange(e)} 
+                    />             
                 </div>
             </div>
             <div className="mt-6 flex items-center gap-4">
