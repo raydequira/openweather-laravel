@@ -37,6 +37,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/weather/city', [WeatherController::class, 'city'])->name('weather.city');
     Route::get('/weather/coordinates', [WeatherController::class, 'coordinates'])->name('weather.coordinates');
+    Route::get('/weather/histories', [WeatherController::class, 'histories'])->name('weather.histories');
 });
 
 require __DIR__.'/auth.php';

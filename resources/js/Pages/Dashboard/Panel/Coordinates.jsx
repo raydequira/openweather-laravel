@@ -7,6 +7,7 @@ import { useForm } from '@inertiajs/react';
 
 export default function Coordinates() {
     
+    // You can use useForm to set your data aside from useState
     const { data, setData } = useForm({
         'longitude' : '',
         'latitude'  : '',

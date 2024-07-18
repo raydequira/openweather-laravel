@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\History;
 use App\Traits\OpenWeather;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -35,17 +36,28 @@ class WeatherController extends Controller
         ]);
     }
 
+    public function histories(Request $requet)
+    {
+        $user = auth()->user();
+        $histories = History::whereBelongsTo($user)->orderBy('id', 'desc')->get();
+
+        return response()->json([
+            'histories' => $histories
+        ]);
+    }
+
     private function getWeather($filter) 
     {
         if (isset($filter['city']) && $filter['city']) {
             $response   = $this->getOpenWeatherData($filter['city']);            
             $user       = auth()->user();  
             if ($response->successful()) {
-                // insert db
-                /*History::create([
-                    'city'     => $filter['city'],
-                    'created_by' => $user->id,
-                ]);*/
+                // insert recent search to db
+                History::create([
+                    'city'          => $filter['city'],
+                    'created_by'    => $user->id,
+                    'response'      => $response->body(),
+                ]);
 
                 return $response->json();
             } else {
@@ -64,10 +76,12 @@ class WeatherController extends Controller
             $user       = auth()->user();  
             if ($response->successful()) {
                 // insert db
-                /*History::create([
-                    'city'     => $filter['city'],
-                    'created_by' => $user->id,
-                ]);*/
+                History::create([
+                    'longitude'     => $filter['lat'],
+                    'latitude'      => $filter['lon'],
+                    'created_by'    => $user->id,
+                    'response'      => $response->body(),
+                ]);
 
                 return $response->json();
             } else {
@@ -84,8 +98,5 @@ class WeatherController extends Controller
                     'message'   => 'invalid parameter'
                 ]);
         }
-
-        //http://api.openweathermap.org/geo/1.0/reverse?lat=51.5098&lon=-0.1180&limit=5&appid={API key}
-        //https://api.openweathermap.org/data/2.5/weather?q=rock&appid=
     }
 }

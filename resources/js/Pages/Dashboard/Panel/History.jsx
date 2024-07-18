@@ -1,16 +1,41 @@
-import React, { useState } from "react";
-import InputLabel from '@/Components/InputLabel';
-import TextInput from '@/Components/TextInput';
-import { useForm } from '@inertiajs/react';
+import React, { useState, useEffect } from "react";
+import dayjs from 'dayjs';
+import { ToastContainer, toast } from 'react-toastify';
 
-export default function History() {
-    
-    const { data, setData, patch, errors, processing, recentlySuccessful } = useForm({
-        longitude: '',
-        latitude: '',
-    });
+export default function History() {    
+    const [data, setData] = useState([]);
+    const [loading, setLoading] = useState(true);
 
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    const fetchData = async () => {
+        try {
+            // aside from axios you can also use fetch API
+            const response = await fetch(route('weather.histories'));
+            if (!response.ok) {
+                toast.loading("Error getting the data");
+            }
+            const data = await response.json();
+            setData(data.histories);
+            setLoading(false);
+        } catch (error) {
+            toast.loading(error.message);
+            setLoading(false);
+        }
+      };
+
+      
     return (
+        <>
+        { loading ? (
+            <p>Loading..</p>
+        ) : loading === false && data.length === 0 ? (
+            <section className="p-4 max-w-xl">
+                <p className="mt-1 text-sm text-gray-600">No recent search found.</p>          
+            </section>
+        ) : (
         <section className="p-4 max-w-xl">
             <div className="mt-6 space-y-6">
                 <header>
@@ -34,44 +59,36 @@ export default function History() {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="border-b border-gray-200 dark:border-gray-700">
-                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">
-                                    <b>City:</b> London
-                                </th>
-                                <td class="px-6 py-4">
-                                    07/22/2024 10:23
-                                </td>
-                                <td class="px-6 py-4 bg-gray-50 dark:bg-gray-800">
-                                    <a href="#" >View</a>
-                                </td>
-                            </tr>
-                            <tr class="border-b border-gray-200 dark:border-gray-700">
-                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">
-                                    <b>City:</b> Manila
-                                </th>
-                                <td class="px-6 py-4">
-                                    07/22/2024 09:25
-                                </td>
-                                <td class="px-6 py-4 bg-gray-50 dark:bg-gray-800">
-                                    <a href="#" >View</a>
-                                </td>
-                            </tr>
-                            <tr class="border-b border-gray-200 dark:border-gray-700">
-                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">
-                                    <b>Coordinates:</b> 41.40338, 2.17403
-                                </th>
-                                <td class="px-6 py-4">
-                                    07/21/2024 09:00
-                                </td>
-                                <td class="px-6 py-4 bg-gray-50 dark:bg-gray-800">
-                                    <a href="#" >View</a>
-                                </td>
-                            </tr>                           
+                            {data.map((history, index) => {
+                                return (
+                                <tr class="border-b border-gray-200 dark:border-gray-700">
+                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">
+                                        { history.city ? (
+                                            <>
+                                                <b>City:</b> {history.city}
+                                            </>
+                                        ) : history.longitude != '' && history.latitude != '' ? (
+                                            <>
+                                                <b>Coordinates:</b> {history.latitude}, {history.longitude}
+                                            </>
+                                        ) : null }
+                                    </th>
+                                    <td class="px-6 py-4">
+                                        {dayjs(history.created_at).format('DD/MM/YYYY HH:mm')}
+                                    </td>
+                                    <td class="px-6 py-4 bg-gray-50 dark:bg-gray-800">
+                                        <a href="#" >View</a>
+                                    </td>
+                                </tr>
+                                );
+                            })}                                                    
                         </tbody>
                     </table>
                 </div>
-
             </div>
+            <ToastContainer />
         </section>
+        )}
+        </>
     );
 }
