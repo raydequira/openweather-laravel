@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import dayjs from 'dayjs';
 import { ToastContainer, toast } from 'react-toastify';
 
-export default function History() {    
+export default function History({
+    viewHistoryData
+}) {    
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -24,7 +26,7 @@ export default function History() {
             toast.loading(error.message);
             setLoading(false);
         }
-      };
+    };
 
       
     return (
@@ -77,7 +79,11 @@ export default function History() {
                                         {dayjs(history.created_at).format('DD/MM/YYYY HH:mm')}
                                     </td>
                                     <td class="px-6 py-4 bg-gray-50 dark:bg-gray-800">
-                                        <a href="#" >View</a>
+                                        <a 
+                                            href={void(0)} 
+                                            onClick={ () => viewHistoryData(history) } 
+                                            className="cursor-pointer"
+                                        >View</a>
                                     </td>
                                 </tr>
                                 );

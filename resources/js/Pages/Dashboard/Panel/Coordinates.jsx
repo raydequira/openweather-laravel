@@ -1,3 +1,5 @@
+import React, { useState } from "react";
+import CoordinatesTable from '@/Pages/Dashboard/Panel/CoordinatesTable';
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
@@ -5,13 +7,17 @@ import TextInput from '@/Components/TextInput';
 import { ToastContainer, toast } from 'react-toastify';
 import { useForm } from '@inertiajs/react';
 
-export default function Coordinates() {
+export default function Coordinates({
+    historyData
+}) {
     
     // You can use useForm to set your data aside from useState
     const { data, setData } = useForm({
         'longitude' : '',
         'latitude'  : '',
     });
+    // Show history data if given
+    const { weatherData, setWeatherData } = useState(historyData);
 
     const handleSearch = (e) => {
         var regLatitude = new RegExp("^-?([0-8]?[0-9]|90)(\.[0-9]{1,10})$");
@@ -75,6 +81,9 @@ export default function Coordinates() {
                 <div className="mt-6 flex items-center gap-4">
                     <PrimaryButton onClick={ () => handleSearch() }>Search</PrimaryButton>
                 </div>
+                <div className="mt-6 flex items-center gap-4">
+                    <CoordinatesTable weatherData={weatherData}/>
+                </div>                
                 <ToastContainer />
             </div>
         </section>

@@ -10,6 +10,7 @@ import TabIcons from '@/Pages/Dashboard/TabIcons';
 
 export default function Index({ auth }) {
     const [currentTab, setCurrentTab] = useState("City");
+    const [historyData, setHistoryData] = useState("");
     const tabs = [
         'City',
         'Coordinates',
@@ -40,19 +41,28 @@ export default function Index({ auth }) {
         )	
 	};
 
+    const viewHistoryData = (data) => {		
+        if (data.city) {
+            setCurrentTab('City');
+        } else if (data.latitude && data.longitude) {
+            setCurrentTab('Coordinates');
+        }
+        setHistoryData(JSON.parse(data.response));
+	};
+
     const Panel = () => {
 		switch(currentTab) {
             case 'City':
                 return (
-                    <City />
+                    <City historyData={historyData}/>
                 );
             case 'Coordinates':
                 return (
-                    <Coordinates />
+                    <Coordinates historyData={historyData}/>
                 );
             case 'History':
                 return (
-                    <History />
+                    <History viewHistoryData={viewHistoryData}/>
                 );            
           }	
 	};
