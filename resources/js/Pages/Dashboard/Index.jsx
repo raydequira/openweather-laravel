@@ -41,13 +41,13 @@ export default function Index({ auth }) {
         )	
 	};
 
-    const viewHistoryData = (data) => {		
+    const viewHistoryData = (data) => {		        
+        setHistoryData(JSON.parse(data.response));
         if (data.city) {
             setCurrentTab('City');
         } else if (data.latitude && data.longitude) {
             setCurrentTab('Coordinates');
-        }
-        setHistoryData(JSON.parse(data.response));
+        }        
 	};
 
     const Panel = () => {

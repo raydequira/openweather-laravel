@@ -19,7 +19,6 @@ trait OpenWeather {
         return Http::get(env("WEATHER_API_URL_DAILY"), [
             'lat'   => $lat,
             'lon'   => $lon,
-            'cnt'   => 7,
             'appid' => $this->apiId(),
         ]);
     }

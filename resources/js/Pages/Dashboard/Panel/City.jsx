@@ -4,7 +4,7 @@ import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import { ToastContainer, toast } from 'react-toastify';
-import CityTable from "./CityTable";
+import CityTable from "@/Pages/Dashboard/Panel/CityTable";
 
 export default function City({
     historyData
@@ -68,7 +68,7 @@ export default function City({
             <div className="mt-6 flex items-center gap-4">
                 <PrimaryButton onClick={ () => handleSearch() }>Search</PrimaryButton>
             </div>
-            <div className="mt-6 flex items-center gap-4">
+            <div className="mt-6 items-center gap-4">
                 <CityTable weatherData={weatherData}/>
             </div>
             <ToastContainer />

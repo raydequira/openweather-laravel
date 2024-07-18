@@ -17,7 +17,7 @@ export default function Coordinates({
         'latitude'  : '',
     });
     // Show history data if given
-    const { weatherData, setWeatherData } = useState(historyData);
+    const [weatherData, setWeatherData] = useState(historyData);
 
     const handleSearch = (e) => {
         var regLatitude = new RegExp("^-?([0-8]?[0-9]|90)(\.[0-9]{1,10})$");
@@ -38,6 +38,7 @@ export default function Coordinates({
             if (response.data.status == 'error') {
                 toast.error(response.data.message);                
             } else {
+                setWeatherData(response.data);
                 toast.success("Please see result");
             }            
         }).catch(function (error) {
