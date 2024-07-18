@@ -6,7 +6,6 @@ export default function CoordinatesTable({
 }) {    
     // You can add info and icons here but for now will keep it simple
     const weather = weatherData;
-    console.log(weather);
     return (
         <>        
         { weatherData ? (

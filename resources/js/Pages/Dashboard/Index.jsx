@@ -16,11 +16,17 @@ export default function Index({ auth }) {
         'Coordinates',
         'History'
     ];
+    const handleTabChange = (tabName) => {
+        setHistoryData("");
+		setCurrentTab(tabName);
+	};
+    
+    
 
     const TabDefault = ({ tabName }) => {
 		return (
             <li className="me-2">
-                <a href="#" onClick={ () => setCurrentTab(tabName)} className="inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 group" aria-current="page">
+                <a href="#" onClick={ () => handleTabChange(tabName)} className="inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 group" aria-current="page">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" className="me-2" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <TabIcons tabName={tabName}/>
                 </svg>{tabName}
@@ -32,7 +38,7 @@ export default function Index({ auth }) {
     const TabActive = ({ tabName }) => {
 		return (
             <li className="me-2">
-                <a href="#" onClick={ () => setCurrentTab(tabName)} className="inline-flex items-center justify-center p-4 text-blue-600 border-b-2 border-blue-600 rounded-t-lg active dark:text-blue-500 dark:border-blue-500 group" >
+                <a href="#" onClick={ () => handleTabChange(tabName)} className="inline-flex items-center justify-center p-4 text-blue-600 border-b-2 border-blue-600 rounded-t-lg active dark:text-blue-500 dark:border-blue-500 group" >
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" className="me-2" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <TabIcons tabName={tabName} />
                     </svg>{tabName}
