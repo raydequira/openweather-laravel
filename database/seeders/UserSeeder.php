@@ -16,12 +16,16 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
+        /* 
+         * Adding default User 
+         * via seed
+        */
         User::firstOrCreate([            
-            'name' => 'admin',
-            'email' => 'admin@test.com',
+            'name'              => 'admin',
+            'email'             => 'admin@test.com',
             'email_verified_at' => now(),
-            'password' => \Hash::make('p@ssw0rd'),
-            'remember_token' => Str::random(10),
+            'password'          => \Hash::make('p@ssw0rd'),
+            'remember_token'    => Str::random(10),
         ]);
     }
 }

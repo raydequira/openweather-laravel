@@ -17,6 +17,9 @@ class DashboardController extends Controller
 
         if (!$cities) {
             $cities = $this->getCountriesNowData();        
+            // can be in cache or DB but
+            // put in session for now for less configuration
+            // filtering by country first will make it faster
             Session::put('cities', $cities);
         }
         
